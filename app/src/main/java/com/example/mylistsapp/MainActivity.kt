@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -31,28 +34,51 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ShowText()
+            MaterialTheme() {
+                ShowText()
+            }
         }
     }
 }
 
-@Preview
 @Composable
 fun ShowText(){
-    Column(modifier = Modifier
+
+    var name by remember { mutableStateOf("")}
+
+    val fruits = listOf("Apple","Mango","Orange","Avocado")
+
+       Column(modifier = Modifier
         .fillMaxSize()
-        .background(color = Color.Magenta).padding(20.dp), verticalArrangement = Arrangement.SpaceEvenly, horizontalAlignment = Alignment.CenterHorizontally) {
+        .background(color = Color.Magenta)
+        .padding(20.dp), verticalArrangement = Arrangement.SpaceEvenly, horizontalAlignment = Alignment.CenterHorizontally) {
+
         Text("Hello World!", fontSize = 20.sp)
         Text("Guess who???", fontSize = 20.sp)
 
-        var name by remember { mutableStateOf("") }
+           LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)) {
+               items(fruits){fruit -> Text(fruit, modifier = Modifier.padding(8.dp))}
+           }
+
         Text(name, fontSize = 50.sp)
+
         OutlinedTextField(
             value = name,
             onValueChange = {name = it},
             label = { Text("Enter name here") }
         )
-        ElevatedButton(onClick = {name="Nobody"}, modifier = Modifier.fillMaxWidth().padding(10.dp))
+        ElevatedButton(onClick = {name="Nobody"}, modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp))
         {Text("Enter Nobody", fontSize = 20.sp, fontWeight = FontWeight.Bold)}
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun ShowTextPreview() {
+    MaterialTheme {
+        ShowText()
+    }
+}
+
